@@ -19,8 +19,8 @@ class AppWindow(QMainWindow):
         self.entry_result = self.output["data_results"][self.entry_index]
         self.change_entries(0)
         self.ui.is_middle_button.clicked.connect(self.save_middle)
-        # self.ui.is_not_middle_button.clicked.connect(self.status_label.update)
-        # self.ui.reset_entry_button.clicked.connect(self.status_label.update)
+        self.ui.is_not_middle_button.clicked.connect(self.delete_middle)
+        self.ui.reset_entry_button.clicked.connect(self.reset_middle)
         self.ui.next_button.clicked.connect(self.next_entry)
         self.ui.previous_button.clicked.connect(self.previous_entry)
         self.show()
@@ -47,6 +47,17 @@ class AppWindow(QMainWindow):
         # it must not be saved
         # start it off as the entry from the input file. notes will be added and such
         self.entry_result = self.input["results"][self.entry_index]
+
+    # Called when the delete middle button is pressed
+    def delete_middle(self):
+        self.entry_result = False
+        #Saves this update to the file and clears any extra data
+        self.change_entries(self.entry_index)
+
+    # Called when the reset middle button is pressed
+    def reset_middle(self):
+        self.entry_result = None
+        self.change_entries(self.entry_index)
 
     # Displays a entry.
     def read_entry_data(self):
@@ -141,6 +152,7 @@ class AppWindow(QMainWindow):
             self.ui.which_middle_spin_box.setMaximum(len(self.entry_result["middles"]) - 1)
             self.ui.add_middle_button.setEnabled(True)
             self.ui.remove_middle_button.setEnabled(True)
+            #TODO Set the maximum of the spin boxes to be the number of words in sentence.
             self.ui.subject_line_edit.setEnabled(True)
             self.ui.subject_spin_box.setEnabled(True)
             self.ui.verb_line_edit.setEnabled(True)
