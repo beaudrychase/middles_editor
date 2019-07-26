@@ -326,7 +326,7 @@ font: 14pt &quot;Sans Serif&quot;;</string>
                <string notr="true"/>
               </property>
               <property name="text">
-               <string>Remove Middle</string>
+               <string>Delete Last Middle</string>
               </property>
               <property name="iconSize">
                <size>

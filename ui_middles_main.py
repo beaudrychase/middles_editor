@@ -321,7 +321,7 @@ class Ui_MainWindow(object):
         self.note_editor.setPlainText(_translate("MainWindow", "this is a good note"))
         self.label_4.setText(_translate("MainWindow", "Which Middle:"))
         self.add_middle_button.setText(_translate("MainWindow", "Add Middle"))
-        self.remove_middle_button.setText(_translate("MainWindow", "Remove Middle"))
+        self.remove_middle_button.setText(_translate("MainWindow", "Delete Last Middle"))
         self.label.setText(_translate("MainWindow", "Subject"))
         self.label_2.setText(_translate("MainWindow", "Verb"))
         self.label_3.setText(_translate("MainWindow", "Adverb"))

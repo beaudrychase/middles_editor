@@ -19,15 +19,18 @@ class AppWindow(QMainWindow):
             self.input = json.load(f)
         self.output = self.create_output_json("test.json")
         self.entry_index = 0
-        self.entry_result = self.output["data_results"][self.entry_index]
-        self.displayed_entry = self.output["data_results"][self.entry_index]
+        self.entry_result = self.output["results"][self.entry_index]
+        self.displayed_entry = self.output["results"][self.entry_index]
         self.change_entries(0)
         self.ui.is_middle_button.clicked.connect(self.save_middle)
         self.ui.is_not_middle_button.clicked.connect(self.delete_middle)
         self.ui.reset_entry_button.clicked.connect(self.reset_middle)
         self.ui.next_button.clicked.connect(self.next_entry)
         self.ui.previous_button.clicked.connect(self.previous_entry)
-        #shortcuts
+        # The value that was previously held in which_middle_spin_box
+        self.which_middle_old = 0
+        self.ui.which_middle_spin_box.valueChanged.connect(self.which_middle_changed)
+        # shortcuts
         self.next_shortcut = QShortcut(QKeySequence("Right"), self)
         self.next_shortcut.activated.connect(self.next_entry)
         self.next_shortcut = QShortcut(QKeySequence("Left"), self)
@@ -37,6 +40,22 @@ class AppWindow(QMainWindow):
         self.delete_shortcut = QShortcut(QKeySequence("d"), self)
         self.delete_shortcut.activated.connect(self.delete_middle)
         self.show()
+
+    # Called when the user selects a new middle to be viewed.
+    # Saves the data currently in the widgets and changes them to show the new middle
+    def which_middle_changed(self):
+        # save the values in the widgets
+        # assert that the middle is saved already
+        if self.entry_result is not None and self.entry_result is not False:
+            new_middle_values = {"note": self.ui.note_editor.toPlainText(),
+                                 "subject": {"word": self.ui.subject_line_edit.text(),
+                                             "index": self.ui.subject_spin_box.value()},
+                                 "verb": {"word": self.ui.verb_line_edit.text(),
+                                          "index": self.ui.verb_spin_box.value()},
+                                 "adverb": {"word": self.ui.adverb_line_edit.text(),
+                                            "index": self.ui.adverb_spin_box.value()}}
+            self.entry_result["middles"][self.which_middle_old] = new_middle_values
+        self.which_middle_old = self.ui.which_middle_spin_box.value()
 
     # Creates the initial state for the output json and fills in the fields that need to be initialized.
     def create_output_json(self, input_file_name):
@@ -49,7 +68,7 @@ class AppWindow(QMainWindow):
 
         output_json["source_file_name"] = input_file_name
         output_json["complete"] = False
-        output_json["data_results"] = [None] * len(self.input["results"])
+        output_json["results"] = [None] * len(self.input["results"])
         return output_json
 
     # Runs when the is_middle_button is pressed
@@ -66,7 +85,7 @@ class AppWindow(QMainWindow):
     # Called when the delete middle button is pressed
     def delete_middle(self):
         self.entry_result = False
-        #Saves this update to the file and clears any extra data
+        # Saves this update to the file and clears any extra data
         self.change_entries(self.entry_index)
 
     # Called when the reset middle button is pressed
@@ -86,8 +105,8 @@ class AppWindow(QMainWindow):
             entry = self.entry_result
         self.displayed_entry = entry
         words_in_sentence = len(entry["sentence"].split(" "))
-        self.ui.which_middle_spin_box.setMaximum(len(entry["middles"]) - 1)
         self.ui.which_middle_spin_box.setValue(0)
+        self.ui.which_middle_spin_box.setMaximum(len(entry["middles"]) - 1)
         self.ui.groupBox.setTitle("Middle {0}/{1}".format(self.entry_index, self.input["sentence_number"] - 1))
         self.ui.note_editor.setPlainText(entry["middles"][0]["note"])
         self.ui.sentence_label.setText(self.markup_sentence())
@@ -103,8 +122,10 @@ class AppWindow(QMainWindow):
         self.ui.adverb_line_edit.setText(entry["middles"][0]["adverb"]["word"])
         self.ui.adverb_spin_box.setMaximum(words_in_sentence - 1)
         self.ui.adverb_spin_box.setValue(entry["middles"][0]["adverb"]["index"])
+        self.which_middle_changed() # since it was just changed above
 
-    #adds color and underlines to the words of the middle currently displayed
+
+    # adds color and underlines to the words of the middle currently displayed
     def markup_sentence(self):
         middle = self.displayed_entry["middles"][self.ui.which_middle_spin_box.value()]
         split_sentence = self.displayed_entry["sentence"].split(" ")
@@ -137,7 +158,7 @@ class AppWindow(QMainWindow):
             middle["adverb"]["index"] = self.ui.adverb_spin_box.value()
             self.entry_result["middles"][self.ui.which_middle_spin_box.value()] = middle
         # save the updated entry to the output json
-        self.output["data_results"][self.entry_index] = self.entry_result
+        self.output["results"][self.entry_index] = self.entry_result
         # change data to point to new entry
         # check extreme values
         if new_index < 0:
@@ -147,7 +168,7 @@ class AppWindow(QMainWindow):
         else:
             self.entry_index = new_index
         # load in the status of the new entry
-        self.entry_result = self.output["data_results"][self.entry_index]
+        self.entry_result = self.output["results"][self.entry_index]
         # there are three cases the widgets need to be aware of.
         if self.entry_result is None or self.entry_index is False:
             # all of the widgets for editing the middle.
