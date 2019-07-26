@@ -1,3 +1,4 @@
+import json
 import sys
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from ui_middles_main import Ui_MainWindow
@@ -8,6 +9,8 @@ class AppWindow(QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        with open("test.json", 'r') as f:
+            self.input = json.load(f)
         self.show()
 
 
