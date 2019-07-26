@@ -260,9 +260,7 @@ class Ui_MainWindow(object):
         self.is_middle_button.clicked['bool'].connect(self.subject_spin_box.setDisabled)
         self.is_middle_button.clicked['bool'].connect(self.verb_spin_box.setDisabled)
         self.is_middle_button.clicked['bool'].connect(self.adverb_spin_box.setDisabled)
-        self.is_middle_button.clicked.connect(self.status_label.update)
-        self.is_not_middle_button.clicked.connect(self.status_label.update)
-        self.reset_entry_button.clicked.connect(self.status_label.update)
+
         self.is_not_middle_button.clicked['bool'].connect(self.note_editor.setEnabled)
         self.is_not_middle_button.clicked['bool'].connect(self.which_middle_spin_box.setEnabled)
         self.is_not_middle_button.clicked['bool'].connect(self.add_middle_button.setEnabled)
