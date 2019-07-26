@@ -90,6 +90,9 @@
          </item>
          <item>
           <widget class="QPushButton" name="reset_entry_button">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -786,54 +789,6 @@ font: 14pt &quot;Sans Serif&quot;;</string>
    </hints>
   </connection>
   <connection>
-   <sender>is_middle_button</sender>
-   <signal>clicked()</signal>
-   <receiver>status_label</receiver>
-   <slot>update()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>54</x>
-     <y>87</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>262</x>
-     <y>111</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>is_not_middle_button</sender>
-   <signal>clicked()</signal>
-   <receiver>status_label</receiver>
-   <slot>update()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>584</x>
-     <y>74</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>262</x>
-     <y>111</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>reset_entry_button</sender>
-   <signal>clicked()</signal>
-   <receiver>status_label</receiver>
-   <slot>update()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>934</x>
-     <y>85</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>482</x>
-     <y>114</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>is_not_middle_button</sender>
    <signal>clicked(bool)</signal>
    <receiver>note_editor</receiver>
@@ -1214,6 +1169,38 @@ font: 14pt &quot;Sans Serif&quot;;</string>
     <hint type="destinationlabel">
      <x>967</x>
      <y>823</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_not_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>reset_entry_button</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>703</x>
+     <y>70</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>882</x>
+     <y>67</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>reset_entry_button</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>277</x>
+     <y>62</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>919</x>
+     <y>70</y>
     </hint>
    </hints>
   </connection>
