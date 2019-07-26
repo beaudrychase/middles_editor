@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>782</width>
-    <height>722</height>
+    <width>1210</width>
+    <height>964</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
      <widget class="QGroupBox" name="groupBox">
       <property name="title">
@@ -25,6 +25,9 @@
         <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
           <widget class="QPushButton" name="is_middle_button">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Saves this middle&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="styleSheet">
             <string notr="true">font: 18pt &quot;Sans Serif&quot;;</string>
            </property>
@@ -35,11 +38,33 @@
          </item>
          <item>
           <widget class="QPushButton" name="is_not_middle_button">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Deletes the middle and goes to next entry&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="styleSheet">
             <string notr="true">font: 18pt &quot;Sans Serif&quot;;</string>
            </property>
            <property name="text">
             <string>Is not a Middle</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="reset_entry_button">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>23</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Resets this entry to how it was before you started editing it. Marks it unaccounted for&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 18pt &quot;Sans Serif&quot;;</string>
+           </property>
+           <property name="text">
+            <string>Reset Entry</string>
            </property>
           </widget>
          </item>
@@ -67,120 +92,183 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item>
-        <widget class="QPlainTextEdit" name="note_editor">
-         <property name="styleSheet">
-          <string notr="true">font: 10pt &quot;Sans Serif&quot;;</string>
+        <widget class="QGroupBox" name="editing_entry_box">
+         <property name="enabled">
+          <bool>true</bool>
          </property>
-         <property name="plainText">
-          <string>this is a good note</string>
+         <property name="focusPolicy">
+          <enum>Qt::WheelFocus</enum>
          </property>
+         <property name="title">
+          <string>Editing Entry</string>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QPlainTextEdit" name="note_editor">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font: 10pt &quot;Sans Serif&quot;;</string>
+            </property>
+            <property name="plainText">
+             <string>this is a good note</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QLabel" name="label_4">
+                <property name="text">
+                 <string>Which Middle:</string>
+                </property>
+                <property name="buddy">
+                 <cstring>which_middle_spin_box</cstring>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="which_middle_spin_box">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select which middle to view, if there are multiple middles in this sentence&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QPushButton" name="add_middle_button">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If you see another middle in this sentence, add it then fill out the fields.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>Add Middle</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="remove_middle_button">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If there are too many middles listed for this entry, this will delete the one currently viewed&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>Remove Middle</string>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>16</width>
+                <height>16</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="gridLayout">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Subject</string>
+              </property>
+              <property name="buddy">
+               <cstring>subject_line_edit</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Verb</string>
+              </property>
+              <property name="buddy">
+               <cstring>verb_line_edit</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Adverb</string>
+              </property>
+              <property name="buddy">
+               <cstring>adverb_line_edit</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="subject_line_edit">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>middle</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QSpinBox" name="subject_spin_box">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="verb_line_edit">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>reads</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLineEdit" name="adverb_line_edit">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>well</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QSpinBox" name="verb_spin_box">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QSpinBox" name="adverb_spin_box">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
-           <item>
-            <widget class="QLabel" name="label_4">
-             <property name="text">
-              <string>Which Middle:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="which_middle_spin_box"/>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <widget class="QPushButton" name="add_middle_button">
-           <property name="text">
-            <string>Add Middle</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="remove_middle_button">
-           <property name="text">
-            <string>Remove Middle</string>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>16</width>
-             <height>16</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="reset_entry_button">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>23</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Reset Entry</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="0">
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>Subject</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_2">
-           <property name="text">
-            <string>Verb</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_3">
-           <property name="text">
-            <string>Adverb</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="subject_line_edit">
-           <property name="text">
-            <string>middle</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <widget class="QSpinBox" name="subject_spin_box"/>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="verb_line_edit">
-           <property name="text">
-            <string>reads</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLineEdit" name="adverb_line_edit">
-           <property name="text">
-            <string>well</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="QSpinBox" name="verb_spin_box"/>
-         </item>
-         <item row="2" column="2">
-          <widget class="QSpinBox" name="adverb_spin_box"/>
-         </item>
-        </layout>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
@@ -228,7 +316,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>782</width>
+     <width>1210</width>
      <height>20</height>
     </rect>
    </property>
@@ -253,6 +341,618 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>is_middle_button</tabstop>
+  <tabstop>is_not_middle_button</tabstop>
+  <tabstop>middle_text_viewer</tabstop>
+  <tabstop>note_editor</tabstop>
+  <tabstop>which_middle_spin_box</tabstop>
+  <tabstop>add_middle_button</tabstop>
+  <tabstop>remove_middle_button</tabstop>
+  <tabstop>reset_entry_button</tabstop>
+  <tabstop>subject_line_edit</tabstop>
+  <tabstop>subject_spin_box</tabstop>
+  <tabstop>verb_line_edit</tabstop>
+  <tabstop>adverb_line_edit</tabstop>
+  <tabstop>verb_spin_box</tabstop>
+  <tabstop>adverb_spin_box</tabstop>
+  <tabstop>next_button</tabstop>
+  <tabstop>previous_button</tabstop>
+  <tabstop>editing_entry_box</tabstop>
+ </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>is_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>note_editor</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>39</x>
+     <y>77</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>39</x>
+     <y>551</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>which_middle_spin_box</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>90</x>
+     <y>78</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>253</x>
+     <y>757</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>add_middle_button</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>87</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>466</x>
+     <y>760</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>remove_middle_button</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>138</x>
+     <y>84</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>854</x>
+     <y>756</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>subject_line_edit</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>158</x>
+     <y>90</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>255</x>
+     <y>796</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>verb_line_edit</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>68</x>
+     <y>83</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>196</x>
+     <y>816</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>adverb_line_edit</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>66</x>
+     <y>96</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>138</x>
+     <y>847</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>subject_spin_box</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>153</x>
+     <y>66</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1140</x>
+     <y>789</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>verb_spin_box</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>128</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1154</x>
+     <y>830</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>adverb_spin_box</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>53</x>
+     <y>90</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1155</x>
+     <y>852</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_middle_button</sender>
+   <signal>clicked()</signal>
+   <receiver>status_label</receiver>
+   <slot>update()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>54</x>
+     <y>87</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>262</x>
+     <y>111</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_not_middle_button</sender>
+   <signal>clicked()</signal>
+   <receiver>status_label</receiver>
+   <slot>update()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>584</x>
+     <y>74</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>262</x>
+     <y>111</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>reset_entry_button</sender>
+   <signal>clicked()</signal>
+   <receiver>status_label</receiver>
+   <slot>update()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>934</x>
+     <y>85</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>482</x>
+     <y>114</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_not_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>note_editor</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>582</x>
+     <y>75</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>555</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_not_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>which_middle_spin_box</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>419</x>
+     <y>91</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>262</x>
+     <y>753</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_not_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>add_middle_button</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>448</x>
+     <y>82</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>452</x>
+     <y>762</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_not_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>remove_middle_button</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>571</x>
+     <y>88</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>827</x>
+     <y>761</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_not_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>subject_line_edit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>487</x>
+     <y>84</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>182</x>
+     <y>788</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_not_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>verb_line_edit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>489</x>
+     <y>75</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>235</x>
+     <y>819</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_not_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>adverb_line_edit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>578</x>
+     <y>73</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>326</x>
+     <y>847</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_not_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>subject_spin_box</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>595</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1147</x>
+     <y>795</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_not_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>verb_spin_box</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>563</x>
+     <y>74</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1138</x>
+     <y>823</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_not_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>adverb_spin_box</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>532</x>
+     <y>69</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1152</x>
+     <y>858</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>is_not_middle_button</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>387</x>
+     <y>65</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>431</x>
+     <y>69</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>is_not_middle_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>is_middle_button</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>638</x>
+     <y>67</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>376</x>
+     <y>74</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>reset_entry_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>is_middle_button</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>852</x>
+     <y>70</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>336</x>
+     <y>67</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>reset_entry_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>is_not_middle_button</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>883</x>
+     <y>72</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>722</x>
+     <y>65</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>reset_entry_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>note_editor</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1161</x>
+     <y>87</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1164</x>
+     <y>542</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>reset_entry_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>which_middle_spin_box</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1137</x>
+     <y>91</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>388</x>
+     <y>762</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>reset_entry_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>add_middle_button</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1026</x>
+     <y>88</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>547</x>
+     <y>764</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>reset_entry_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>remove_middle_button</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>976</x>
+     <y>78</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1038</x>
+     <y>752</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>reset_entry_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>subject_line_edit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>931</x>
+     <y>82</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>760</x>
+     <y>794</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>reset_entry_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>adverb_line_edit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>955</x>
+     <y>75</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>937</x>
+     <y>857</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>reset_entry_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>subject_spin_box</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1100</x>
+     <y>79</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1162</x>
+     <y>794</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>reset_entry_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>verb_spin_box</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1092</x>
+     <y>91</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1150</x>
+     <y>828</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>reset_entry_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>adverb_spin_box</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1081</x>
+     <y>83</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1154</x>
+     <y>854</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>reset_entry_button</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>verb_line_edit</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>977</x>
+     <y>85</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>967</x>
+     <y>823</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
