@@ -225,7 +225,7 @@ class AppWindow(QMainWindow):
         # load in the status of the new entry
         self.entry_result = self.output["results"][self.entry_index]
         # there are three cases the widgets need to be aware of.
-        if self.entry_result is None or self.entry_index is False:
+        if self.entry_result is None or self.entry_result is False:
             # all of the widgets for editing the middle.
             # we don't want them enabled
             self.ui.note_editor.setEnabled(False)
