@@ -32,6 +32,14 @@ class AppWindow(QMainWindow):
         self.ui.which_middle_spin_box.valueChanged.connect(self.which_middle_changed)
         self.ui.add_middle_button.clicked.connect(self.add_middle)
         self.ui.remove_middle_button.clicked.connect(self.remove_middle)
+        # Updating display when middle is edited
+        self.ui.subject_line_edit.editingFinished.connect(self.edit_middle)
+        self.ui.subject_spin_box.editingFinished.connect(self.edit_middle)
+        self.ui.verb_line_edit.editingFinished.connect(self.edit_middle)
+        self.ui.verb_spin_box.editingFinished.connect(self.edit_middle)
+        self.ui.adverb_line_edit.editingFinished.connect(self.edit_middle)
+        self.ui.adverb_spin_box.editingFinished.connect(self.edit_middle)
+
         # shortcuts
         self.next_shortcut = QShortcut(QKeySequence("Right"), self)
         self.next_shortcut.activated.connect(self.next_entry)
@@ -46,6 +54,7 @@ class AppWindow(QMainWindow):
     # Called when the displayed middle's markup needs to be changed
     def edit_middle(self):
         assert self.entry_result is not None and self.entry_result is not False
+        self.ui.sentence_label.setText(self.markup_sentence())
 
 
 
