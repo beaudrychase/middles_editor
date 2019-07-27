@@ -30,6 +30,8 @@ class AppWindow(QMainWindow):
         # The value that was previously held in which_middle_spin_box
         self.which_middle_old = 0
         self.ui.which_middle_spin_box.valueChanged.connect(self.which_middle_changed)
+        self.ui.add_middle_button.clicked.connect(self.add_middle)
+        self.ui.remove_middle_button.clicked.connect(self.remove_middle)
         # shortcuts
         self.next_shortcut = QShortcut(QKeySequence("Right"), self)
         self.next_shortcut.activated.connect(self.next_entry)
@@ -41,20 +43,55 @@ class AppWindow(QMainWindow):
         self.delete_shortcut.activated.connect(self.delete_middle)
         self.show()
 
+    # called when the add middle button is pressed.
+    def add_middle(self):
+        assert self.entry_result is not None and self.entry_result is not False
+        empty_middle = {"subject": {"word": "", "index": 0},
+                        "verb": {"word": "", "index": 0},
+                        "adverb": {"word": "", "index": 0},
+                        "note": ""}
+        self.entry_result["middles"].append(empty_middle)
+        self.ui.which_middle_spin_box.setMaximum(self.ui.which_middle_spin_box.maximum() + 1)
+
+    def remove_middle(self):
+        assert self.entry_result is not None and self.entry_result is not False
+        # there always has to be at least one middle saved and the last one can't be deleted while viewing
+        if len(self.entry_result["middles"]) > 1 and \
+                self.ui.which_middle_spin_box.value() != len(self.entry_result["middles"]) - 1:
+            self.entry_result["middles"] = self.entry_result["middles"][:-1]
+            self.ui.which_middle_spin_box.setMaximum(self.ui.which_middle_spin_box.maximum() - 1)
     # Called when the user selects a new middle to be viewed.
     # Saves the data currently in the widgets and changes them to show the new middle
+
     def which_middle_changed(self):
         # save the values in the widgets
         # assert that the middle is saved already
         if self.entry_result is not None and self.entry_result is not False:
+            # save the values
             new_middle_values = {"note": self.ui.note_editor.toPlainText(),
                                  "subject": {"word": self.ui.subject_line_edit.text(),
                                              "index": self.ui.subject_spin_box.value()},
                                  "verb": {"word": self.ui.verb_line_edit.text(),
                                           "index": self.ui.verb_spin_box.value()},
                                  "adverb": {"word": self.ui.adverb_line_edit.text(),
-                                            "index": self.ui.adverb_spin_box.value()}}
+                                            "index": self.ui.adverb_spin_box.value()},
+                                 "source_of_transitivity": "Data Entry"}
             self.entry_result["middles"][self.which_middle_old] = new_middle_values
+            # display new values
+            if len(self.entry_result["middles"]):
+                self.ui.remove_middle_button.setEnabled(False)
+            else:
+                self.ui.remove_middle_button.setEnabled(True)
+            in_focus_middle = self.entry_result["middles"][self.ui.which_middle_spin_box.value()]
+            self.ui.sentence_label.setText(self.markup_sentence())
+            self.ui.note_editor.setPlainText(in_focus_middle["note"])
+            self.ui.subject_line_edit.setText(in_focus_middle["subject"]["word"])
+            self.ui.subject_spin_box.setValue(in_focus_middle["subject"]["index"])
+            self.ui.verb_line_edit.setText(in_focus_middle["verb"]["word"])
+            self.ui.verb_spin_box.setValue(in_focus_middle["verb"]["index"])
+            self.ui.adverb_line_edit.setText(in_focus_middle["adverb"]["word"])
+            self.ui.adverb_spin_box.setValue(in_focus_middle["adverb"]["index"])
+
         self.which_middle_old = self.ui.which_middle_spin_box.value()
 
     # Creates the initial state for the output json and fills in the fields that need to be initialized.
