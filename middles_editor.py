@@ -56,36 +56,20 @@ class AppWindow(QMainWindow):
         assert self.entry_result is not None and self.entry_result is not False
         split_sentence = self.entry_result["sentence"].split(" ")
         for i in range(0, len(split_sentence)):
-            print(i)
             if re.search('(\W|^)' + word, split_sentence[i]) is not None:
                 spin_box.setValue(i)
                 return
 
     def create_auto_set_index(self, type):
-        if type == "subject":
-            def subject():
+        def set_index():
+            if type == "subject":
                 self.auto_set_index(self.ui.subject_spin_box, self.ui.subject_line_edit.text())
-                self.edit_middle()
-            return subject
-        elif type == "verb":
-            def verb():
+            elif type == "verb":
                 self.auto_set_index(self.ui.verb_spin_box, self.ui.verb_line_edit.text())
-                self.edit_middle()
-            return verb
-        else:
-            def adverb():
+            else:
                 self.auto_set_index(self.ui.adverb_spin_box, self.ui.adverb_line_edit.text())
-                self.edit_middle()
-            return adverb
-
-    # def auto_set_index_adverb(self):
-    #     self.auto_set_index(self.ui.subject_spin_box, self.ui.subject_line_edit.text())
-    #
-    # def auto_set_index_verb(self):
-    #     self.auto_set_index(self.ui.verb_spin_box, self.ui.verb_line_edit.text())
-    #
-    # def auto_set_index_subject(self):
-    #     self.auto_set_index(self.ui.subject_spin_box, self.ui.subject_line_edit.text())
+            self.edit_middle()
+        return set_index
 
     # Called when the displayed middle's markup needs to be changed
     def edit_middle(self):
