@@ -33,11 +33,12 @@ class AppWindow(QMainWindow):
         self.ui.add_middle_button.clicked.connect(self.add_middle)
         self.ui.remove_middle_button.clicked.connect(self.remove_middle)
         # Updating display when middle is edited
-        self.ui.subject_line_edit.editingFinished.connect(self.edit_middle)
+        self.ui.subject_line_edit.editingFinished.connect(self.create_auto_set_index("subject"))
+        self.ui.verb_line_edit.editingFinished.connect(self.create_auto_set_index("verb"))
+        self.ui.adverb_line_edit.editingFinished.connect(self.create_auto_set_index("adverb"))
+
         self.ui.subject_spin_box.editingFinished.connect(self.edit_middle)
-        self.ui.verb_line_edit.editingFinished.connect(self.edit_middle)
         self.ui.verb_spin_box.editingFinished.connect(self.edit_middle)
-        self.ui.adverb_line_edit.editingFinished.connect(self.edit_middle)
         self.ui.adverb_spin_box.editingFinished.connect(self.edit_middle)
 
         # shortcuts
@@ -51,12 +52,45 @@ class AppWindow(QMainWindow):
         self.delete_shortcut.activated.connect(self.delete_middle)
         self.show()
 
+    def auto_set_index(self, spin_box, word):
+        assert self.entry_result is not None and self.entry_result is not False
+        split_sentence = self.entry_result["sentence"].split(" ")
+        for i in range(0, len(split_sentence)):
+            print(i)
+            if re.search('(\W|^)' + word, split_sentence[i]) is not None:
+                spin_box.setValue(i)
+                return
+
+    def create_auto_set_index(self, type):
+        if type == "subject":
+            def subject():
+                self.auto_set_index(self.ui.subject_spin_box, self.ui.subject_line_edit.text())
+                self.edit_middle()
+            return subject
+        elif type == "verb":
+            def verb():
+                self.auto_set_index(self.ui.verb_spin_box, self.ui.verb_line_edit.text())
+                self.edit_middle()
+            return verb
+        else:
+            def adverb():
+                self.auto_set_index(self.ui.adverb_spin_box, self.ui.adverb_line_edit.text())
+                self.edit_middle()
+            return adverb
+
+    # def auto_set_index_adverb(self):
+    #     self.auto_set_index(self.ui.subject_spin_box, self.ui.subject_line_edit.text())
+    #
+    # def auto_set_index_verb(self):
+    #     self.auto_set_index(self.ui.verb_spin_box, self.ui.verb_line_edit.text())
+    #
+    # def auto_set_index_subject(self):
+    #     self.auto_set_index(self.ui.subject_spin_box, self.ui.subject_line_edit.text())
+
     # Called when the displayed middle's markup needs to be changed
     def edit_middle(self):
         assert self.entry_result is not None and self.entry_result is not False
         self.ui.sentence_label.setText(self.markup_sentence())
-
-
 
     # called when the add middle button is pressed.
     def add_middle(self):
@@ -148,7 +182,6 @@ class AppWindow(QMainWindow):
     # Displays a entry and restricts widgets values (e.i subject_spin_box value must be an index of the sentence)
     def read_entry_data(self):
         # I want this to set all of the fields to show the data.
-        # TODO Set the maximum of the spin boxes to be the number of words in sentence.
         # if the middle is not accounted for OR deleted, display the input file one
         entry = self.input['results'][self.entry_index]
 
