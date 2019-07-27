@@ -43,6 +43,12 @@ class AppWindow(QMainWindow):
         self.delete_shortcut.activated.connect(self.delete_middle)
         self.show()
 
+    # Called when the displayed middle's markup needs to be changed
+    def edit_middle(self):
+        assert self.entry_result is not None and self.entry_result is not False
+
+
+
     # called when the add middle button is pressed.
     def add_middle(self):
         assert self.entry_result is not None and self.entry_result is not False
@@ -146,7 +152,6 @@ class AppWindow(QMainWindow):
         self.ui.which_middle_spin_box.setMaximum(len(entry["middles"]) - 1)
         self.ui.groupBox.setTitle("Middle {0}/{1}".format(self.entry_index, self.input["sentence_number"] - 1))
         self.ui.note_editor.setPlainText(entry["middles"][0]["note"])
-        self.ui.sentence_label.setText(self.markup_sentence())
         self.ui.subject_line_edit.setText(entry["middles"][0]["subject"]["word"])
         # words in sentence - 1 because you select indices
         self.ui.subject_spin_box.setMaximum(words_in_sentence - 1)
@@ -159,19 +164,23 @@ class AppWindow(QMainWindow):
         self.ui.adverb_line_edit.setText(entry["middles"][0]["adverb"]["word"])
         self.ui.adverb_spin_box.setMaximum(words_in_sentence - 1)
         self.ui.adverb_spin_box.setValue(entry["middles"][0]["adverb"]["index"])
+        # Using the values in the widgets, markup_sentence
+        self.ui.sentence_label.setText(self.markup_sentence())
         self.which_middle_changed() # since it was just changed above
 
-
     # adds color and underlines to the words of the middle currently displayed
+    # Information is gathered from the widgets
     def markup_sentence(self):
         middle = self.displayed_entry["middles"][self.ui.which_middle_spin_box.value()]
         split_sentence = self.displayed_entry["sentence"].split(" ")
-        for e in [("subject", "blue"), ("verb", "red"), ("adverb", "green")]:
-            index = middle[e[0]]["index"]
-            word = middle[e[0]]["word"]
+        for e in [(self.ui.subject_line_edit.text(), self.ui.subject_spin_box.value(), "red"),
+                  (self.ui.verb_line_edit.text(), self.ui.verb_spin_box.value(), "green"),
+                  (self.ui.adverb_line_edit.text(), self.ui.adverb_spin_box.value(), "blue")]:
+            index = e[1]
+            word = e[0]
             for i in range(index, index - 3, -1):
                 if 0 <= i < len(split_sentence) and re.search('(\W|^)' + word, split_sentence[i]) is not None:
-                    split_sentence[i] = "<font color=\"{0}\"><u>{1}</u></font>".format(e[1], split_sentence[i])
+                    split_sentence[i] = "<font color=\"{0}\"><u>{1}</u></font>".format(e[2], split_sentence[i])
         return " ".join(split_sentence)
 
     def next_entry(self):
