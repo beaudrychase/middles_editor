@@ -2,10 +2,36 @@ import datetime
 import json
 import re
 import sys
+import argparse
+import os
 
 from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import QMainWindow, QApplication, QShortcut
+from PyQt5.QtWidgets import QMainWindow, QApplication, QShortcut, QAction
 from ui_middles_main import Ui_MainWindow
+
+parser = argparse.ArgumentParser(description='This app allows the user to go over the output file of middles-tools '
+                                             'and select from the output all of the entries that are middles and save '
+                                             'the final results.',
+                                 prog="middles_editor.py")
+parser.add_argument("-i", "--input", required=True, type=str, help="Specifies the path to the input file. This file "
+                                                                   "is the output of middles-tool, or the output of "
+                                                                   "this file if the data is marked complete.")
+parser.add_argument("-o", "--output", type=str, help="Specifies the path to the output file. (if this is not "
+                                                     "specified, any changes made during the run will not be saved)")
+parser.add_argument("-c", "--continue", dest="cont", type=str,
+                    help="Specifies the path to an output file that you want to "
+                         "continue from.")
+args = parser.parse_args()
+
+
+def determine_output_location():
+    if args.output is not None:
+        return args.output
+    if args.cont is not None and args.output is None:
+        return args.cont
+    if args.cont is not None:
+        return args.cont
+    return None
 
 
 class AppWindow(QMainWindow):
@@ -15,13 +41,13 @@ class AppWindow(QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        with open("test.json", 'r') as f:
+        with open(args.input, 'r') as f:
             self.input = json.load(f)
-        self.output = self.create_output_json("test.json")
+        self.output = self.create_output_json()
+        self.output_location = determine_output_location()
         self.entry_index = 0
         self.entry_result = self.output["results"][self.entry_index]
         self.displayed_entry = self.output["results"][self.entry_index]
-        self.change_entries(0)
         self.ui.is_middle_button.clicked.connect(self.save_middle)
         self.ui.is_not_middle_button.clicked.connect(self.delete_middle)
         self.ui.reset_entry_button.clicked.connect(self.reset_middle)
@@ -40,7 +66,7 @@ class AppWindow(QMainWindow):
         self.ui.subject_spin_box.editingFinished.connect(self.edit_middle)
         self.ui.verb_spin_box.editingFinished.connect(self.edit_middle)
         self.ui.adverb_spin_box.editingFinished.connect(self.edit_middle)
-
+        self.ui.actionSave_and_Exit.triggered.connect(self.save_and_exit)
         # shortcuts
         self.next_shortcut = QShortcut(QKeySequence("Right"), self)
         self.next_shortcut.activated.connect(self.next_entry)
@@ -50,7 +76,32 @@ class AppWindow(QMainWindow):
         self.save_shortcut.activated.connect(self.save_middle)
         self.delete_shortcut = QShortcut(QKeySequence("d"), self)
         self.delete_shortcut.activated.connect(self.delete_middle)
+        self.save_and_exit_shortcut = QShortcut(QKeySequence("Ctrl+q"), self)
+        self.save_and_exit_shortcut.activated.connect(self.save_and_exit)
+        self.change_entries(0)
         self.show()
+
+    # Returns whether or not all of the data entries are accounted for.
+    def complete(self):
+        for entry in self.output["results"]:
+            if entry is None:
+                return False
+        return True
+
+    def save_and_exit(self):
+        if self.complete():
+            old_result_list = self.output["results"]
+            new_result_list = list()
+            for entry in old_result_list:
+                assert entry is not None
+                if entry is not False:
+                    new_result_list.append(entry)
+            self.output["results"] = new_result_list
+            self.output["complete"] = True
+        if self.output_location is not None:
+            with open(self.output_location, "w") as f:
+                json.dump( self.output, f)
+        self.close()
 
     def auto_set_index(self, spin_box, word):
         assert self.entry_result is not None and self.entry_result is not False
@@ -69,6 +120,7 @@ class AppWindow(QMainWindow):
             else:
                 self.auto_set_index(self.ui.adverb_spin_box, self.ui.adverb_line_edit.text())
             self.edit_middle()
+
         return set_index
 
     # Called when the displayed middle's markup needs to be changed
@@ -93,6 +145,7 @@ class AppWindow(QMainWindow):
                 self.ui.which_middle_spin_box.value() != len(self.entry_result["middles"]) - 1:
             self.entry_result["middles"] = self.entry_result["middles"][:-1]
             self.ui.which_middle_spin_box.setMaximum(self.ui.which_middle_spin_box.maximum() - 1)
+
     # Called when the user selects a new middle to be viewed.
     # Saves the data currently in the widgets and changes them to show the new middle
 
@@ -128,7 +181,18 @@ class AppWindow(QMainWindow):
         self.which_middle_old = self.ui.which_middle_spin_box.value()
 
     # Creates the initial state for the output json and fills in the fields that need to be initialized.
-    def create_output_json(self, input_file_name):
+    def create_output_json(self):
+        if args.cont is not None:
+            with open(args.cont, 'r') as f:
+                loaded_json = json.load(f)
+                loaded_results = loaded_json["results"]
+                if loaded_json["complete"]:
+                    loaded_json["results"] = [False] * len(self.input["results"])
+                    for entry in loaded_results:
+                        assert entry is not None
+                        loaded_json["results"][entry["index"]] = entry
+
+                return loaded_json
         output_json = {}
         # the time this program was run
         now = datetime.datetime.now()
@@ -136,7 +200,9 @@ class AppWindow(QMainWindow):
         # the time the input file was created
         output_json["source_time_created"] = self.input["time_created"]
 
-        output_json["source_file_name"] = input_file_name
+        self.output["source_file"] = self.output["input_file"]
+        self.output["input_file"] = args.input
+        self.output["input_sentence_number"] = len(self.input["results"])
         output_json["complete"] = False
         output_json["results"] = [None] * len(self.input["results"])
         return output_json
@@ -149,6 +215,7 @@ class AppWindow(QMainWindow):
         # it must not be saved
         # start it off as the entry from the input file. notes will be added and such
         self.entry_result = self.input["results"][self.entry_index]
+        self.entry_result["index"] = self.entry_index
         self.change_entries(self.entry_index)
         self.ui.note_editor.setFocus(True)
 
@@ -192,7 +259,7 @@ class AppWindow(QMainWindow):
         self.ui.adverb_spin_box.setValue(entry["middles"][0]["adverb"]["index"])
         # Using the values in the widgets, markup_sentence
         self.ui.sentence_label.setText(self.markup_sentence())
-        self.which_middle_changed() # since it was just changed above
+        self.which_middle_changed()  # since it was just changed above
 
     # adds color and underlines to the words of the middle currently displayed
     # Information is gathered from the widgets
@@ -287,7 +354,47 @@ class AppWindow(QMainWindow):
         self.read_entry_data()
 
 
-app = QApplication(sys.argv)
-w = AppWindow()
-w.show()
-sys.exit(app.exec_())
+def correct_input_json(input_json):
+    # TODO check that the json is valid.
+    return True
+
+
+def correct_continue_json(continue_json):
+    # TODO check that the json is valid.
+    return True
+
+
+def check_args():
+    print(args)
+    input_path = args.input
+    output_path = args.output
+    continue_path = args.cont
+    if not os.path.isfile(input_path):
+        raise Exception("Input path must go to a file")
+    with open(input_path) as input_file:
+        if not correct_input_json(json.load(input_file)):
+            raise Exception("The input file does not contain a valid input json.")
+
+    if output_path is not None:
+        if os.path.realpath(input_path) == os.path.realpath(output_path):
+            raise Exception("Arguments will overwrite the input file")
+        if os.path.isfile(output_path) and (continue_path is None or
+                                             os.path.realpath(output_path) != os.path.realpath(continue_path)):
+            print("{0} already exists, continuing will overwrite it. Continue? [N|y]".format(output_path))
+            result = input() + ""
+            if not (result.lower() == "y" or "yes"):
+                raise Exception("Arguments will overwrite file saved at {0}".format(output_path))
+    if continue_path is not None:
+        if not os.path.isfile(continue_path):
+            raise Exception("Continue file path must go to a file")
+        with open(continue_path) as continue_file:
+            if not correct_input_json(json.load(continue_file)):
+                raise Exception("The input file does not contain a valid input json.")
+
+
+if __name__ == "__main__":
+    check_args()
+    app = QApplication([])
+    w = AppWindow()
+    w.show()
+    sys.exit(app.exec_())

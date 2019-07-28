@@ -619,19 +619,20 @@ font: 14pt &quot;Sans Serif&quot;;</string>
  </widget>
  <tabstops>
   <tabstop>is_middle_button</tabstop>
-  <tabstop>is_not_middle_button</tabstop>
   <tabstop>note_editor</tabstop>
-  <tabstop>which_middle_spin_box</tabstop>
-  <tabstop>add_middle_button</tabstop>
-  <tabstop>remove_middle_button</tabstop>
-  <tabstop>reset_entry_button</tabstop>
   <tabstop>subject_line_edit</tabstop>
-  <tabstop>subject_spin_box</tabstop>
   <tabstop>verb_line_edit</tabstop>
   <tabstop>adverb_line_edit</tabstop>
+  <tabstop>subject_spin_box</tabstop>
   <tabstop>verb_spin_box</tabstop>
   <tabstop>adverb_spin_box</tabstop>
+  <tabstop>next_button</tabstop>
   <tabstop>previous_button</tabstop>
+  <tabstop>add_middle_button</tabstop>
+  <tabstop>which_middle_spin_box</tabstop>
+  <tabstop>remove_middle_button</tabstop>
+  <tabstop>is_not_middle_button</tabstop>
+  <tabstop>reset_entry_button</tabstop>
   <tabstop>editing_entry_box</tabstop>
  </tabstops>
  <resources/>
