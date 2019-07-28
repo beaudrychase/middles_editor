@@ -1,0 +1,3 @@
+[console_scripts]
+heck = middles_editor_app:main
+

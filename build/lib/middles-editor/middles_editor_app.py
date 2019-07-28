@@ -6,13 +6,13 @@ import argparse
 import os
 
 from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import QMainWindow, QApplication, QShortcut, QAction
+from PyQt5.QtWidgets import QMainWindow, QApplication, QShortcut
 from ui_middles_main import Ui_MainWindow
 
 parser = argparse.ArgumentParser(description='This app allows the user to go over the output file of middles-tools '
                                              'and select from the output all of the entries that are middles and save '
                                              'the final results.',
-                                 prog="middles_editor.py")
+                                 prog="middles_editor_app.py")
 parser.add_argument("-i", "--input", required=True, type=str, help="Specifies the path to the input file. This file "
                                                                    "is the output of middles-tool, or the output of "
                                                                    "this file if the data is marked complete.")
@@ -407,10 +407,13 @@ def check_args():
             if not correct_input_json(json.load(continue_file)):
                 raise Exception("The input file does not contain a valid input json.")
 
-
-if __name__ == "__main__":
+def main():
     check_args()
     app = QApplication([])
     w = AppWindow()
     w.show()
     sys.exit(app.exec_())
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,11 @@
+setup.py
+meditor.egg-info/PKG-INFO
+meditor.egg-info/SOURCES.txt
+meditor.egg-info/dependency_links.txt
+meditor.egg-info/entry_points.txt
+meditor.egg-info/requires.txt
+meditor.egg-info/top_level.txt
+middles-editor/__init__.py
+middles-editor/__main__.py
+middles-editor/middles_editor_app.py
+middles-editor/ui_middles_main.py
