@@ -6,13 +6,13 @@ import argparse
 import os
 
 from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import QMainWindow, QApplication, QShortcut, QAction
+from PyQt5.QtWidgets import QMainWindow, QApplication, QShortcut
 from ui_middles_main import Ui_MainWindow
 
 parser = argparse.ArgumentParser(description='This app allows the user to go over the output file of middles-tools '
                                              'and select from the output all of the entries that are middles and save '
                                              'the final results.',
-                                 prog="middles_editor.py")
+                                 prog="middles_editor_app.py")
 parser.add_argument("-i", "--input", required=True, type=str, help="Specifies the path to the input file. This file "
                                                                    "is the output of middles-tool, or the output of "
                                                                    "this file if the data is marked complete.")
@@ -67,7 +67,10 @@ class AppWindow(QMainWindow):
         self.ui.verb_spin_box.editingFinished.connect(self.edit_middle)
         self.ui.adverb_spin_box.editingFinished.connect(self.edit_middle)
         self.ui.actionSave_and_Exit.triggered.connect(self.save_and_exit)
+        self.ui.actionGo_to_next_Unaccounted.triggered.connect(self.earliest_unaccounted)
         # shortcuts
+        self.earliest_unaccounted_shortcut = QShortcut(QKeySequence("u"), self)
+        self.earliest_unaccounted_shortcut.activated.connect(self.earliest_unaccounted)
         self.next_shortcut = QShortcut(QKeySequence("Right"), self)
         self.next_shortcut.activated.connect(self.next_entry)
         self.next_shortcut = QShortcut(QKeySequence("Left"), self)
@@ -78,8 +81,18 @@ class AppWindow(QMainWindow):
         self.delete_shortcut.activated.connect(self.delete_middle)
         self.save_and_exit_shortcut = QShortcut(QKeySequence("Ctrl+q"), self)
         self.save_and_exit_shortcut.activated.connect(self.save_and_exit)
-        self.change_entries(0)
         self.show()
+        self.change_entries(0)
+
+
+    def change_focus_shortcut(self):
+        self.ui.next_button.setFocus(True)
+
+    def earliest_unaccounted(self):
+        for index in range(0, len(self.output["results"])):
+            entry = self.output["results"][index]
+            if entry is None:
+                self.change_entries(index)
 
     # Returns whether or not all of the data entries are accounted for.
     def complete(self):
@@ -98,9 +111,11 @@ class AppWindow(QMainWindow):
                     new_result_list.append(entry)
             self.output["results"] = new_result_list
             self.output["complete"] = True
+        else:
+            self.output["complete"] = False
         if self.output_location is not None:
             with open(self.output_location, "w") as f:
-                json.dump( self.output, f)
+                json.dump(self.output, f)
         self.close()
 
     def auto_set_index(self, spin_box, word):
@@ -189,8 +204,9 @@ class AppWindow(QMainWindow):
                 if loaded_json["complete"]:
                     loaded_json["results"] = [False] * len(self.input["results"])
                     for entry in loaded_results:
-                        assert entry is not None
-                        loaded_json["results"][entry["index"]] = entry
+                        if entry is not False:
+                            assert entry is not None
+                            loaded_json["results"][entry["index"]] = entry
 
                 return loaded_json
         output_json = {}
@@ -379,7 +395,7 @@ def check_args():
         if os.path.realpath(input_path) == os.path.realpath(output_path):
             raise Exception("Arguments will overwrite the input file")
         if os.path.isfile(output_path) and (continue_path is None or
-                                             os.path.realpath(output_path) != os.path.realpath(continue_path)):
+                                            os.path.realpath(output_path) != os.path.realpath(continue_path)):
             print("{0} already exists, continuing will overwrite it. Continue? [N|y]".format(output_path))
             result = input() + ""
             if not (result.lower() == "y" or "yes"):
@@ -391,10 +407,13 @@ def check_args():
             if not correct_input_json(json.load(continue_file)):
                 raise Exception("The input file does not contain a valid input json.")
 
-
-if __name__ == "__main__":
+def main():
     check_args()
     app = QApplication([])
     w = AppWindow()
     w.show()
     sys.exit(app.exec_())
+
+
+if __name__ == "__main__":
+    main()
