@@ -7,7 +7,7 @@ import os
 
 from PyQt5.QtGui import QKeySequence
 from PyQt5.QtWidgets import QMainWindow, QApplication, QShortcut
-from .ui_middles_main import Ui_MainWindow
+from middles_editor.ui_middles_main import Ui_MainWindow
 
 parser = argparse.ArgumentParser(description='This app allows the user to go over the output file of middles-tools '
                                              'and select from the output all of the entries that are middles and save '
@@ -216,9 +216,9 @@ class AppWindow(QMainWindow):
         # the time the input file was created
         output_json["source_time_created"] = self.input["time_created"]
 
-        self.output["source_file"] = self.output["input_file"]
-        self.output["input_file"] = args.input
-        self.output["input_sentence_number"] = len(self.input["results"])
+        output_json["source_file"] = self.input["input_file"]
+        output_json["input_file"] = args.input
+        output_json["input_sentence_number"] = len(self.input["results"])
         output_json["complete"] = False
         output_json["results"] = [None] * len(self.input["results"])
         return output_json
