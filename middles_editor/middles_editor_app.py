@@ -48,7 +48,6 @@ class AppWindow(QMainWindow):
         self.entry_index = 0
         self.entry_result = self.output["results"][self.entry_index]
 
-
         self.ui.is_middle_button.clicked.connect(self.save_middle)
         self.ui.is_not_middle_button.clicked.connect(self.delete_middle)
         self.ui.reset_entry_button.clicked.connect(self.reset_middle)
@@ -86,8 +85,6 @@ class AppWindow(QMainWindow):
         self.read_entry_data()
         self.change_entries(self.entry_index)
         self.show()
-
-
 
     def change_focus_shortcut(self):
         self.ui.next_button.setFocus(True)
@@ -156,6 +153,7 @@ class AppWindow(QMainWindow):
                         "note": ""}
         self.entry_result["middles"].append(empty_middle)
         self.ui.which_middle_spin_box.setMaximum(self.ui.which_middle_spin_box.maximum() + 1)
+        self.ui.remove_middle_button.setEnabled(True)
 
     def remove_middle(self):
         assert self.entry_result is not None and self.entry_result is not False
@@ -164,40 +162,6 @@ class AppWindow(QMainWindow):
                 self.ui.which_middle_spin_box.value() != len(self.entry_result["middles"]) - 1:
             self.entry_result["middles"] = self.entry_result["middles"][:-1]
             self.ui.which_middle_spin_box.setMaximum(self.ui.which_middle_spin_box.maximum() - 1)
-
-    # Called when the user selects a new middle to be viewed.
-    # Saves the data currently in the widgets and changes them to show the new middle
-
-    def which_middle_changed(self):
-        # save the values in the widgets
-        # assert that the middle is saved already
-        if self.entry_result is not None and self.entry_result is not False:
-            # save the values
-            new_middle_values = {"note": self.ui.note_editor.toPlainText(),
-                                 "subject": {"word": self.ui.subject_line_edit.text(),
-                                             "index": self.ui.subject_spin_box.value()},
-                                 "verb": {"word": self.ui.verb_line_edit.text(),
-                                          "index": self.ui.verb_spin_box.value()},
-                                 "adverb": {"word": self.ui.adverb_line_edit.text(),
-                                            "index": self.ui.adverb_spin_box.value()},
-                                 "source_of_transitivity": "Data Entry"}
-            self.entry_result["middles"][self.which_middle_old] = new_middle_values
-            # display new values
-            if len(self.entry_result["middles"]) != self.ui.which_middle_spin_box.value():
-                self.ui.remove_middle_button.setEnabled(False)
-            else:
-                self.ui.remove_middle_button.setEnabled(True)
-            in_focus_middle = self.entry_result["middles"][self.ui.which_middle_spin_box.value()]
-            self.ui.sentence_label.setText(self.markup_sentence())
-            self.ui.note_editor.setPlainText(in_focus_middle["note"])
-            self.ui.subject_line_edit.setText(in_focus_middle["subject"]["word"])
-            self.ui.subject_spin_box.setValue(in_focus_middle["subject"]["index"])
-            self.ui.verb_line_edit.setText(in_focus_middle["verb"]["word"])
-            self.ui.verb_spin_box.setValue(in_focus_middle["verb"]["index"])
-            self.ui.adverb_line_edit.setText(in_focus_middle["adverb"]["word"])
-            self.ui.adverb_spin_box.setValue(in_focus_middle["adverb"]["index"])
-
-        self.which_middle_old = self.ui.which_middle_spin_box.value()
 
     # Creates the initial state for the output json and fills in the fields that need to be initialized.
     def create_output_json(self):
@@ -249,8 +213,6 @@ class AppWindow(QMainWindow):
     def reset_middle(self):
         self.entry_result = None
         self.change_entries(self.entry_index)
-
-
 
     # adds color and underlines to the words of the middle currently displayed
     # Information is gathered from the widgets
@@ -376,14 +338,46 @@ class AppWindow(QMainWindow):
         self.ui.sentence_label.setText(self.markup_sentence())
         self.which_middle_changed()  # since it was just changed above
 
+    # Called when the user selects a new middle to be viewed.
+    # Saves the data currently in the widgets and changes them to show the new middle
+
+    def which_middle_changed(self):
+        # save the values in the widgets
+        # assert that the middle is saved already
+        if self.entry_result is not None and self.entry_result is not False:
+            # save the values
+            new_middle_values = {"note": self.ui.note_editor.toPlainText(),
+                                 "subject": {"word": self.ui.subject_line_edit.text(),
+                                             "index": self.ui.subject_spin_box.value()},
+                                 "verb": {"word": self.ui.verb_line_edit.text(),
+                                          "index": self.ui.verb_spin_box.value()},
+                                 "adverb": {"word": self.ui.adverb_line_edit.text(),
+                                            "index": self.ui.adverb_spin_box.value()},
+                                 "source_of_transitivity": "Data Entry"}
+            self.entry_result["middles"][self.which_middle_old] = new_middle_values
+            # display new values
+            if len(self.entry_result["middles"]) - 1 == self.ui.which_middle_spin_box.value():
+                self.ui.remove_middle_button.setEnabled(False)
+            else:
+                self.ui.remove_middle_button.setEnabled(True)
+            in_focus_middle = self.entry_result["middles"][self.ui.which_middle_spin_box.value()]
+            self.ui.sentence_label.setText(self.markup_sentence())
+            self.ui.note_editor.setPlainText(in_focus_middle["note"])
+            self.ui.subject_line_edit.setText(in_focus_middle["subject"]["word"])
+            self.ui.subject_spin_box.setValue(in_focus_middle["subject"]["index"])
+            self.ui.verb_line_edit.setText(in_focus_middle["verb"]["word"])
+            self.ui.verb_spin_box.setValue(in_focus_middle["verb"]["index"])
+            self.ui.adverb_line_edit.setText(in_focus_middle["adverb"]["word"])
+            self.ui.adverb_spin_box.setValue(in_focus_middle["adverb"]["index"])
+
+        self.which_middle_old = self.ui.which_middle_spin_box.value()
+
 
 def correct_input_json(input_json):
-    # TODO check that the json is valid.
     return True
 
 
 def correct_continue_json(continue_json):
-    # TODO check that the json is valid.
     return True
 
 
