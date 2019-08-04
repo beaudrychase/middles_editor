@@ -355,7 +355,6 @@ class AppWindow(QMainWindow):
             self.displayed_entry = entry
         else:
             self.displayed_entry = self.input["results"][self.entry_index]
-            print("hello")
         words_in_sentence = len(entry["sentence"].split(" "))
         self.ui.which_middle_spin_box.setValue(0)
         self.ui.which_middle_spin_box.setMaximum(len(entry["middles"]) - 1)
@@ -376,7 +375,6 @@ class AppWindow(QMainWindow):
         # Using the values in the widgets, markup_sentence
         self.ui.sentence_label.setText(self.markup_sentence())
         self.which_middle_changed()  # since it was just changed above
-        print(self.entry_result)
 
 
 def correct_input_json(input_json):
@@ -390,7 +388,6 @@ def correct_continue_json(continue_json):
 
 
 def check_args():
-    print(args)
     input_path = args.input
     output_path = args.output
     continue_path = args.cont
